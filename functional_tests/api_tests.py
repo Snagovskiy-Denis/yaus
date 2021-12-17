@@ -10,14 +10,14 @@ class TestShortURL(APIFuncitonalTest):
         # He sends POST request with his own URL
         # response contains new short link with yaus address in it
         url_to_be_shorten = {'url': self.url_to_be_shorten}
-        response = self.client.post(path='', data=url_to_be_shorten)
-        shorten_url = response.content
+        response = self.client.post(path='/api/', data=url_to_be_shorten)
+        shorten_url = response.json()
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.django_test_server_domain, shorten_url)
 
         # He follow response URL to verify that it redirects to his URL
-        response = self.client.get(path=shorten_url, follow=True)
+        response = self.client.get(path=f'/api/{shorten_url}', follow=True)
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'] == self.url_to_be_shorten)
@@ -36,15 +36,15 @@ class TestHumanReadableURL(APIFuncitonalTest):
             'url': self.url_to_be_shorten,
             'name': self.new_url_name,
         }
-        response = self.client.post(path='', data=url_to_be_shorten)
-        shorten_url = response.content
+        response = self.client.post(path='/api/', data=url_to_be_shorten)
+        shorten_url = response.json()
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.django_test_server_domain, shorten_url)
         self.assertIn(self.new_url_name, shorten_url)
 
         # He follow response URL to verify that it redirects to his URL
-        response = self.client.get(path=shorten_url, follow=True)
+        response = self.client.get(path=f'/api/{shorten_url}', follow=True)
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'] == self.url_to_be_shorten)
