@@ -1,9 +1,12 @@
+from unittest.mock import patch
+
 from rest_framework.test import APITestCase
 from rest_framework import status
 
 from main.models import URL
 
 
+@patch('main.models.ALLOWED_HOSTS', ['127.0.0.1'])
 class CreateShortURL(APITestCase):
 
     url = '/api/'
@@ -39,9 +42,9 @@ class CreateShortURL(APITestCase):
     def test_post_returns_created_url(self):
         URL.objects.create(full='http://archlinux.org', short='')
         response = self.client.post(path=self.url, data=self.url_to_shorten)
-        *schema_and_domain, slug = response.json().split('/')
-        expected_slug = URL.objects.get(full='http://www.example.com').short
-        self.assertEqual(expected_slug, slug)
+        url = response.json()
+        expected_url = URL.objects.get(full='http://www.example.com').short
+        self.assertEqual(expected_url, url)
 
     def test_post_with_name_returns_created_url(self):
         URL.objects.create(full='http://wiki.archlinux.org', short='wiki')

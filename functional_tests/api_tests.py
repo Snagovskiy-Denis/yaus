@@ -1,8 +1,10 @@
 from unittest import skip
+from unittest.mock import patch
 
 from .base import APIFuncitonalTest
 
 
+@patch('main.models.ALLOWED_HOSTS', ['127.0.0.1'])
 class TestShortURL(APIFuncitonalTest):
 
     def test_create_short_url_and_follow_it(self):
@@ -14,7 +16,7 @@ class TestShortURL(APIFuncitonalTest):
         shorten_url = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.django_test_server_domain, shorten_url)
+        self.assertIn('127.0.0.1', shorten_url)
 
         # He follow response URL to verify that it redirects to his URL
         response = self.client.get(path=f'/api/{shorten_url}', follow=True)
@@ -40,7 +42,7 @@ class TestHumanReadableURL(APIFuncitonalTest):
         shorten_url = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.django_test_server_domain, shorten_url)
+        self.assertIn('127.0.0.1', shorten_url)
         self.assertIn(self.new_url_name, shorten_url)
 
         # He follow response URL to verify that it redirects to his URL
