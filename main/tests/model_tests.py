@@ -4,6 +4,7 @@ from django.test import TestCase
 from main.models import URL
 
 
+@patch('main.models.ALLOWED_HOSTS', ['127.0.0.1'])
 class URLTest(TestCase):
 
     def test_save_with_valid_user_defined_short_name_saves_URL(self):
@@ -14,10 +15,9 @@ class URLTest(TestCase):
             self.fail('URL is saved with invalid SlugField value!')
 
     @patch('main.models.convert_10_to_62', return_value='a')
-    @patch('main.models.ALLOWED_HOSTS', ['127.0.0.1'])
     def test_save_without_short_name_call_default_func(self, mock_converter):
         url = URL.objects.create(full='http://www.example.com')
-        self.assertEqual(url.short, 'http://127.0.0.1/a')
+        self.assertEqual(url.short, mock_converter.return_value)
         mock_converter.assert_called_with(number_10_radix=url.id)
 
     @patch('main.models.convert_10_to_62', return_value='a')

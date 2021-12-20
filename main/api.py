@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,4 +16,4 @@ class CreateShortURL(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         url = serializer.save()
-        return Response(url.short, status=status.HTTP_200_OK)
+        return Response(url.get_short(), status=status.HTTP_200_OK)

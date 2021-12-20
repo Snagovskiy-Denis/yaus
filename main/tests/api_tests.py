@@ -42,17 +42,44 @@ class CreateShortURL(APITestCase):
     def test_post_returns_created_url(self):
         URL.objects.create(full='http://archlinux.org', short='')
         response = self.client.post(path=self.url, data=self.url_to_shorten)
-        url = response.json()
-        expected_url = URL.objects.get(full='http://www.example.com').short
-        self.assertEqual(expected_url, url)
+        expected_url = URL.objects.get(full='http://www.example.com')
+        self.assertEqual(expected_url.get_short(), response.json())
 
     def test_post_with_name_returns_created_url(self):
         URL.objects.create(full='http://wiki.archlinux.org', short='wiki')
         response = self.client.post(path=self.url,
                                     data=self.url_to_shorten_with_name)
-        *schema_and_domain, slug = response.json().split('/')
-        expected_slug = URL.objects.get(full='http://www.example.com').short
-        self.assertEqual(expected_slug, slug)
+        self.assertEqual('http://127.0.0.1/short-name', response.json())
+
+    def test_post_returns_error_if_short_name_already_exists(self):
+        self.client.post(path=self.url, data=self.url_to_shorten_with_name)
+        response = self.client.post(path=self.url,
+                                    data=self.url_to_shorten_with_name)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        error = response.json().get('short')[0]
+        self.assertEqual(error, 'url with this short already exists.')
+
+    def test_user_defined_short_name_max_length_is_50(self):
+        url_with_invalid_short_name = {
+            'url': 'http://hacker.com',
+            'name': 'spam' * 50
+        }
+        response = self.client.post(path=self.url,
+                                    data=url_with_invalid_short_name)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        error = response.json().get('short')[0]
+        self.assertIn('no more than 50 characters', error)
+
+    def test_short_name_can_not_contain_unsafe_characters(self):
+        url_with_invalid_short_name = {
+            'url': 'http://hacker.com',
+            'name': '<script>alert("Hacked!")</script>'
+        }
+        response = self.client.post(path=self.url,
+                                    data=url_with_invalid_short_name)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        error = response.json().get('short')[0]
+        self.assertIn('Enter a valid "slug"', error)
 
 
 class FollowShortURL(APITestCase):
