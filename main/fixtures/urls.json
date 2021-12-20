@@ -1,0 +1,26 @@
+[
+    {
+        "model": "main.URL",
+        "pk": 1,
+        "fields": {
+            "full": "http://www.example.com/",
+            "short": "1"
+        }
+    },
+    {
+        "model": "main.URL",
+        "pk": 2,
+        "fields": {
+            "full": "https://archlinux.org/",
+            "short": "arch"
+        }
+    },
+    {
+        "model": "main.URL",
+        "pk": 3,
+        "fields": {
+            "full": "https://wiki.archlinux.org/",
+            "short": "wiki"
+        }
+    }
+]

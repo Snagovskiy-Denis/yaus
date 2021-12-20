@@ -80,7 +80,3 @@ class CreateShortURL(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         error = response.json().get('short')[0]
         self.assertIn('Enter a valid "slug"', error)
-
-
-class FollowShortURL(APITestCase):
-    pass
