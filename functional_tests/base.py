@@ -4,15 +4,16 @@ from rest_framework.test import APITestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 
 
+# @override_settings(ALLOWED_HOSTS=['127.0.0.1'])
 class APIFuncitonalTest(APITestCase):
-    django_test_server_domain = 'http://testserver'
-
     url_to_be_shorten = 'http://www.example.com'
     new_url_name = 'my-url'
 
 
 @override_settings(DEBUG=True)
 class UIFunctionalTest(LiveServerTestCase):
+    url_to_be_shorten = 'http://www.example.com'
+    new_url_name = 'my-url'
 
     @classmethod
     def setUpClass(cls) -> None:
