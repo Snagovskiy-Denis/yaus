@@ -31,8 +31,8 @@ class StandartUseCase(UIFunctionalTest):
         # When she hits enter, the page lists
         # 'http://www.example.com -> is shortened to -> http://localhost/4'
         inputbox.send_keys(Keys.ENTER)
-        sleep(3)
-        link = self.selenium.find_element_by_tag_name('li')
+        sleep(0.5)
+        link = self.selenium.find_element_by_class_name('alert')
         self.assertIn('http://127.0.0.1/4', link.text)
 
         # There is still a text box inviting her to add another item
@@ -46,8 +46,8 @@ class StandartUseCase(UIFunctionalTest):
         # New item appears below previous short item:
         # 'www.python.org -> is shortened to -> http://localhost/py'
         inputbox.send_keys(Keys.ENTER)
-        sleep(3)
-        link = self.selenium.find_element_by_tag_name('li')
+        sleep(0.5)
+        link = self.selenium.find_element_by_class_name('alert')
         self.assertIn('http://127.0.0.1/py', link.text)
 
         # She follows short py url and it redirects her to www.python.org
