@@ -13,7 +13,7 @@ class URL(models.Model):
 
     def get_short(self):
         '''Returns short URL'''
-        host = ALLOWED_HOSTS[0]
+        host = ALLOWED_HOSTS[-1]
         return f'http://{host}/{self.short}'
 
 
