@@ -18,13 +18,12 @@ services:
 
   app:
     build: .
-    command: python manage.py runserver
+    command: gunicorn yaus.wsgi:application --bind 0.0.0.0:8000
     working_dir: /code
     environment:
       DATABASE_HOST: db
-      vloumes:
-        - ./:/code
-      ports:
-        - '8000:8000'
-      depends_on:
-        - db
+      volumes: ./:/code
+    ports: 
+      - '8000:8000'
+    depends_on: 
+      - db
