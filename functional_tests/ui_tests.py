@@ -1,9 +1,11 @@
+from unittest.mock import patch
 from time import sleep
 from selenium.webdriver.common.keys import Keys
 
 from .base import UIFunctionalTest
 
 
+@patch('main.models.ALLOWED_HOSTS', ['127.0.0.1'])
 class StandartUseCase(UIFunctionalTest):
     fixtures = ['urls']
 

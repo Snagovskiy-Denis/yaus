@@ -23,6 +23,8 @@ With project outside docker container:
 ```
 docker-compose -f docker-compose-dev.yml up -d
 python -m venv ./venv 
-source ./venv/bin/activate && pip install -r requirements.txt
+source ./venv/bin/activate 
+pip install -r requirements.txt
+./manage.py migrate
 ./manage.py runserver
 ```
